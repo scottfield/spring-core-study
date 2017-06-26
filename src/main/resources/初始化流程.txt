@@ -1,0 +1,4 @@
+1.初始化environment,如果是web环境，会读取相应的initparams
+2.关闭已有的bean factory，创建新的bean factory并设置bean overriding和circular reference，通过beanDefinitionReader加载bean定义
+3.初始化bean factory,主要是一些default bean和beanPostProcessor的注册
+4.注册servletContextAwareProcessor
