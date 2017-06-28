@@ -12,7 +12,9 @@ public class ApplicationContextTest {
     @Test
     public void applicationInitializationTest() throws Exception {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(new String[]{"daos.xml","services.xml"});
-        PetStoreService petStoreService = context.getBean(PetStoreService.class);
-        assertNotNull(petStoreService);
+//        context.close();
+        context.registerShutdownHook();
+       /* PetStoreService petStoreService = context.getBean(PetStoreService.class);
+        assertNotNull(petStoreService);*/
     }
 }

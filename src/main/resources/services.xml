@@ -5,4 +5,5 @@
     <bean class="com.jackie.study.spring.ioc.PetStoreServiceImpl">
         <property name="petStoreDao" ref="petStoreDao"/>
     </bean>
+    <bean class="com.jackie.study.spring.ioc.InstantiationTracingBeanPostProcessor"/>
 </beans>
