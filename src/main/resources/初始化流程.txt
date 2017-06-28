@@ -43,8 +43,17 @@ org.springframework.context.Lifecycle
 
 Container extension
 
-*BeanFactoryPostProcessor
 *BeanPostProcessor
+-AutowiredAnnotationBeanPostProcessor
+-CommonAnnotationBeanPostProcessor
+-PersistenceAnnotationBeanPostProcessor
+-RequiredAnnotationBeanPostProcessor
+
+
+*BeanFactoryPostProcessor
+-PropertyPlaceholderConfigurer
+-PropertyOverrideConfigurer
+*FactoryBean
 
 
 实用功能
