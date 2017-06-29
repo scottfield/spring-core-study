@@ -1,3 +1,11 @@
+![](img/container-magic.png) 
+
+spring container工作原理图
+========================================================
+![](img/beanFactory%20hierarchy.PNG) 
+
+BeanFactory类结构
+========================================================
 ##容器初始化流程
 1. 初始化environment,如果是web环境，会读取相应的initparams
 2. 关闭已有的bean factory，创建新的bean factory并设置bean overriding和circular reference，通过beanDefinitionReader加载bean定义
@@ -59,6 +67,8 @@
 ##FactoryBean
 - JndiObjectFactoryBean
 - ProxyFactoryBean
+- ServiceLocatorFactoryBean
+- ObjectFactoryCreatingFactoryBean
 ##实用功能
 1. 别名
    * `<alias name="fromName" alias="toName"/>`
@@ -67,5 +77,6 @@
 3. 如何解决不同生命周期的Bean依赖，如singleton的Bean依赖prototype的Bean
    * 实现ApplicationContextAware 接口，手动的调用getBean
    * 使用method injection
-4. 如何解决长生命周期的Bean依赖短生命周期的bean
-  * `<aop:scoped-proxy/>`
+   * ObjectFactoryCreatingFactoryBean
+   * ServiceLocatorFactoryBean
+   * `<aop:scoped-proxy/>`
