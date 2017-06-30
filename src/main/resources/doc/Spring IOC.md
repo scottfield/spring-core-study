@@ -1,10 +1,14 @@
+![](img/spring-overview.png) 
+
+**spring modules**
+========================================================
 ![](img/container-magic.png) 
 
-spring container工作原理图
+**spring container工作原理图**
 ========================================================
 ![](img/beanFactory%20hierarchy.PNG) 
 
-BeanFactory类结构
+**BeanFactory类结构**
 ========================================================
 ##应用上下文初始化流程
 1. 修改当前context的状态为active，将systemProperties和systemEnvironment的值加载到Environment,并验证required的property是否都已经配置
