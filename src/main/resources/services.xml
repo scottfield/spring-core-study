@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-    <bean class="com.jackie.study.spring.ioc.PetStoreServiceImpl">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <alias name="petStoreService" alias="petStoreService1"/>
+    <alias name="petStoreService" alias="petStoreService2"/>
+    <bean id="petStoreService" class="com.jackie.study.spring.ioc.PetStoreServiceImpl">
         <property name="petStoreDao" ref="petStoreDao"/>
+        <property name="petStoreManager" ref="petStoreManager"/>
+        <!--<constructor-arg ref="petStoreManager"/>-->
     </bean>
     <bean class="com.jackie.study.spring.ioc.InstantiationTracingBeanPostProcessor"/>
+    <bean id="petStoreManager" class="com.jackie.study.spring.ioc.PetStoreManagerImpl">
+        <property name="petStoreService" ref="petStoreService1"/>
+        <!--<constructor-arg ref="petStoreService"/>-->
+    </bean>
+    <bean id="anotherPetStoreManager" class="com.jackie.study.spring.ioc.PetStoreManagerImpl">
+        <property name="petStoreService" ref="petStoreService2"/>
+    </bean>
+    <bean id="prototypeBean" class="com.jackie.study.spring.ioc.PrototypeBean" scope="prototype"/>
+    <bean id="prototypeBeanLocator" class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean">
+        <property name="serviceLocatorInterface" value="com.jackie.study.spring.ioc.PrototypeBeanLocator"/>
+    </bean>
+    <bean id="prototypeFactoryBean" class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean">
+        <property name="targetBeanName">
+            <idref bean="prototypeBean"/>
+        </property>
+    </bean>
+    <bean class="com.jackie.study.spring.ioc.SingletonBean" id="singletonBean">
+        <property name="prototypeFactoryBean" ref="prototypeFactoryBean"/>
+        <property name="prototypeBean" ref="prototypeBean"/>
+        <property name="prototypeBeanLocator" ref="prototypeBeanLocator"/>
+        <lookup-method bean="prototypeBean" name="injectPrototypeBean"/>
+    </bean>
+    <context:property-placeholder location="placeholder.properties"/>
+    <context:property-override location="override.properties"/>
+    <bean class="com.jackie.study.spring.ioc.PlaceHolderBean" id="placeHolderBean">
+        <property name="name" value="${name}"/>
+        <property name="sex" value="${sex}"/>
+    </bean>
 </beans>
