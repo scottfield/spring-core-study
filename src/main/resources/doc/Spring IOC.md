@@ -1,12 +1,12 @@
-![](img/spring-overview.png) 
+![](spring-overview.png) 
 
 **spring modules**
 ========================================================
-![](img/container-magic.png) 
+![](container-magic.png) 
 
 **spring container工作原理图**
 ========================================================
-![](img/beanFactory%20hierarchy.PNG) 
+![](beanFactory%20hierarchy.PNG) 
 
 **BeanFactory类结构**
 ========================================================
