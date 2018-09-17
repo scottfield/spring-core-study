@@ -1,16 +1,28 @@
-![](img/container-magic.png) 
+![](spring-overview.png) 
 
-spring container工作原理图
+**spring modules**
 ========================================================
-![](img/beanFactory%20hierarchy.PNG) 
+![](container-magic.png) 
 
-BeanFactory类结构
+**spring container工作原理图**
 ========================================================
-##容器初始化流程
-1. 初始化environment,如果是web环境，会读取相应的initparams
-2. 关闭已有的bean factory，创建新的bean factory并设置bean overriding和circular reference，通过beanDefinitionReader加载bean定义
-3. 初始化bean factory,主要是一些default bean和beanPostProcessor的注册
-4. 注册servletContextAwareProcessor
+![](beanFactory%20hierarchy.PNG) 
+
+**BeanFactory类结构**
+========================================================
+##应用上下文初始化流程
+1. 修改当前context的状态为active，将systemProperties和systemEnvironment的值加载到Environment,并验证required的property是否都已经配置
+2. 创建BeanFactory，加载bean definition
+3. 对bean factory进行标准的初始化,例如设置bean classloader和注册beanPostProcessor
+4. 调用postProcessBeanFactory,对bean factory进行一些后处理，默认是不做任何处理
+5. 调用invokeBeanFactoryPostProcessors,注册bean factory postprocessor并调用
+6. 调用registerBeanPostProcessors,注册定义的bean postprocessor
+7. 调用initMessageSource,初始化message sources,这里就会可以读取我们定义的message source bean，但是名称必须为messageSource
+8. 调用initApplicationEventMulticaster,初始化事件发布器，会读取我们定义的名称为applicationEventMulticaster的Bean,如果没有,默认使用SimpleApplicationEventMulticaster
+9. 调用onRefresh,初始化其他特殊的Bean，默认实现为空，可以在子类中进行自定义
+10. 调用registerListeners,将事件监听器（实现了ApplicationListener的Bean）注册到事件发布器中，并且广播earlyApplicationEvents已有的事件(event)
+11. 调用finishBeanFactoryInitialization,进行factory bean的最后初始化，主要是注册conversion service bean,embeddedValueResolvers,LoadTimeWeaverAware bean 以及其他的singleton bean，并且会将bean factory的配置进行冻结。
+12. 调用finishRefresh,进行life cycle processor的注册和context refresh事件的通知，使用事件发布器发布ContextRefreshedEvent事件，将当前的应用上下文注册到LiveBeansView
 ##依赖注入
 ###依赖注入方式:
 - Constructor-based DI
@@ -33,15 +45,34 @@ BeanFactory类结构
 - byName
 - byConstructor
 ##生命周期管理
-- init:
+- bean初始化顺序
+  1. BeanNameAware's setBeanName
+  2. BeanClassLoaderAware's setBeanClassLoader
+  3. BeanFactoryAware's setBeanFactory
+  4. EnvironmentAware's setEnvironment
+  5. EmbeddedValueResolverAware's setEmbeddedValueResolver
+  6. ResourceLoaderAware's setResourceLoader (only applicable when running in an application context)
+  7. ApplicationEventPublisherAware's setApplicationEventPublisher (only applicable when running in an application context)
+  8. MessageSourceAware's setMessageSource (only applicable when running in an application context)
+  9. ApplicationContextAware's setApplicationContext (only applicable when running in an application context)
+  10. ServletContextAware's setServletContext (only applicable when running in a web application context)
+  11. postProcessBeforeInitialization methods of BeanPostProcessors
+  12. InitializingBean's afterPropertiesSet
+  13. a custom init-method definition
+  14. postProcessAfterInitialization methods of BeanPostProcessors
+- bean销毁顺序
+  1. postProcessBeforeDestruction methods of DestructionAwareBeanPostProcessors
+  2. DisposableBean's destroy
+  3. a custom destroy-method definition
+- 不同init方法调用顺序:
   * Methods annotated with @PostConstruct
   * afterPropertiesSet() as defined by the InitializingBean callback interface
   * A custom configured init() method
-- destroy:
+- 不同destroy方法调用顺序:
   * Methods annotated with @PreDestroy
   * destroy() as defined by the DisposableBean callback interface
   * A custom configured destroy() method
-- Lifecycle,SmartLifecycle
+- 通过Lifecycle,SmartLifecycle对Bean实现生命周期管理
 - common aware interface(not recommend)
   * ApplicationContextAware
   * ApplicationEventPublisherAware

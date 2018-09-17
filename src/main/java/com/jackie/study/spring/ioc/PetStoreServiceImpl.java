@@ -5,6 +5,22 @@ package com.jackie.study.spring.ioc;
  */
 public class PetStoreServiceImpl implements PetStoreService {
     private PetStoreDao petStoreDao;
+    private PetStoreManager petStoreManager;
+
+    public PetStoreServiceImpl() {
+    }
+
+    public PetStoreServiceImpl(PetStoreManager petStoreManager) {
+        this.petStoreManager = petStoreManager;
+    }
+
+    public PetStoreManager getPetStoreManager() {
+        return petStoreManager;
+    }
+
+    public void setPetStoreManager(PetStoreManager petStoreManager) {
+        this.petStoreManager = petStoreManager;
+    }
 
     public PetStoreDao getPetStoreDao() {
         return petStoreDao;
